@@ -1,4 +1,5 @@
 package com.blogpessoal.MeuBlog.Controller;
+
 import java.util.List;
 
 import java.util.Optional;
@@ -18,10 +19,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.blogpessoal.MeuBlog.Model.usuarioModel;
+import com.blogpessoal.MeuBlog.Model.Utilidades.usuarioDTO;
 import com.blogpessoal.MeuBlog.Repository.usuarioRepository;
 import com.blogpessoal.MeuBlog.Servico.usuarioServicos;
-
-
 
 @RestController
 @RequestMapping("/usuario")
@@ -44,6 +44,17 @@ public class usuarioController {
 	@PostMapping("/salvar")
 	public ResponseEntity<Object> salvar(@Valid @RequestBody usuarioModel novoUsuario) {
 		Optional<Object> objetoOptional = servicos.cadastroUsuario(novoUsuario);
+
+		if (objetoOptional.isEmpty()) {
+			return ResponseEntity.status(400).build();
+		} else {
+			return ResponseEntity.status(201).body(objetoOptional.get());
+		}
+	}
+
+	@PutMapping("/credenciais")
+	public ResponseEntity<Object> credenciais(@Valid @RequestBody usuarioDTO usuarioParaAutenticar) {
+		Optional<?> objetoOptional = servicos.pegarCredenciais(usuarioParaAutenticar);
 
 		if (objetoOptional.isEmpty()) {
 			return ResponseEntity.status(400).build();
