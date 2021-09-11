@@ -14,15 +14,15 @@ public class postagemModel {
 	private @Id @GeneratedValue(strategy = GenerationType.IDENTITY) long idPostagem;
 	private String titulo;
 	private String descricao;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "criadores")
 	@JsonIgnoreProperties({ "minhasPostagens" })
 	private usuarioModel criador;
-	
-	@ManyToOne 
+
+	@ManyToOne
 	@JoinColumn(name = "Temas")
-	@JsonIgnoreProperties({"postagens"})
+	@JsonIgnoreProperties({ "postagens" })
 	private temaModel TemasRelacionados;
 
 	public temaModel getTemasRelacionados() {
