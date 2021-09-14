@@ -23,13 +23,13 @@ public class usuarioModel {
 	@JsonIgnoreProperties({ "criador" })
 	private List<postagemModel> minhasPostagens = new ArrayList<>();
 
-	public usuarioModel(long idUsuario, String nome, String email, String senha) {
-		super();
+	/*public usuarioModel(long idUsuario, String nome, String email, String senha) {
+
 		this.idUsuario = idUsuario;
 		this.nome = nome;
 		this.email = email;
 		this.senha = senha;
-	}
+	}*/
 
 	public Long getIdUsuario() {
 		return idUsuario;
