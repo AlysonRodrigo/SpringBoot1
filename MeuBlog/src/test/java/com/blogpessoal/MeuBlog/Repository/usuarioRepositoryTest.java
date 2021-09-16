@@ -1,4 +1,4 @@
-package com.blogpessoal.MeuBlog.Repository;
+/*package com.blogpessoal.MeuBlog.Repository;
 
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -47,4 +47,4 @@ class usuarioRepositoryTest {
 	void end() {
 		System.out.println("Teste Finalizado!");
 	}
-}
+}*/

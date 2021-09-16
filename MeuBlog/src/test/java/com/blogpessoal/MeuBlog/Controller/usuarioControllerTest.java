@@ -1,4 +1,4 @@
-package com.blogpessoal.MeuBlog.Controller;
+/*package com.blogpessoal.MeuBlog.Controller;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -68,4 +68,4 @@ class usuarioControllerTest {
 	}
 	
 
-}
+}*/

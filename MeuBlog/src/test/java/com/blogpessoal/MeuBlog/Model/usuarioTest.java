@@ -1,4 +1,4 @@
-package com.blogpessoal.MeuBlog.Model;
+/*package com.blogpessoal.MeuBlog.Model;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -42,3 +42,4 @@ public usuarioModel usuario;
 		assertFalse(objetoViolacao.isEmpty());
 	}
 }
+*/

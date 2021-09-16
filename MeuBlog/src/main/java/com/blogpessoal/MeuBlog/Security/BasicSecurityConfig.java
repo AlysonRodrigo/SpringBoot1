@@ -22,14 +22,17 @@ public class BasicSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http.authorizeRequests().antMatchers(HttpMethod.POST, "/usuario/salvar").permitAll()
-				.antMatchers(HttpMethod.PUT, "/usuario/credenciais").permitAll().anyRequest().authenticated()
-				.and().httpBasic().and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-				.and().cors().and().csrf().disable();
+		http.authorizeRequests().antMatchers("/usuarios/salvar").permitAll().antMatchers("/usuarios/credenciais")
+				.permitAll().antMatchers(HttpMethod.OPTIONS).permitAll().anyRequest().authenticated().and().httpBasic()
+				.and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().cors().and()
+				.csrf().disable();
 	}
 
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 		auth.userDetailsService(service);
+		auth.inMemoryAuthentication().withUser("admin").password(senhaEncoder().encode("admin"))
+				.authorities("ROLE_USER");
 	}
+
 }
