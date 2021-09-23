@@ -110,7 +110,7 @@ public class usuarioController {
 		} else {
 			return ResponseEntity.status(400).build();
 		}
-
+	}
 	@DeleteMapping("/deletar/{id_usuario}")
 	public ResponseEntity<Object> deletarPorId(@PathVariable(value = "id_usuario") Long idUsuario) {
 		Optional<usuarioModel> objetoExistente = repositorio.findById(idUsuario);
