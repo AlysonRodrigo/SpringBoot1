@@ -8,6 +8,7 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,8 +24,12 @@ import com.blogpessoal.MeuBlog.Model.Utilidades.usuarioDTO;
 import com.blogpessoal.MeuBlog.Repository.usuarioRepository;
 import com.blogpessoal.MeuBlog.Servico.usuarioServicos;
 
+import io.swagger.annotations.Api;
+
 @RestController
 @RequestMapping("/usuario")
+@Api(tags = "Controlador de Postagem", description = "Utilitario de Postagens")
+@CrossOrigin("*")
 public class usuarioController {
 	private @Autowired usuarioRepository repositorio;
 	private @Autowired usuarioServicos servicos;
@@ -97,12 +102,24 @@ public class usuarioController {
 	}
 
 	@PutMapping("/atualizar")
-	public ResponseEntity<usuarioModel> atualizar(@Valid @RequestBody usuarioModel usuarioParaAtualizar) {
-		return ResponseEntity.status(201).body(repositorio.save(usuarioParaAtualizar));
-	}
+	public ResponseEntity<Object> alterar(@Valid @RequestBody usuarioDTO usuarioParaAlterar) {
+		Optional<?> objetoAlterado = servicos.alterarUsuario(usuarioParaAlterar);
+
+		if (objetoAlterado.isPresent()) {
+			return ResponseEntity.status(201).body(objetoAlterado.get());
+		} else {
+			return ResponseEntity.status(400).build();
+		}
 
 	@DeleteMapping("/deletar/{id_usuario}")
-	public void deletarUsuarioPorId(@PathVariable(value = "id_usuario") Long idUsuario) {
-		repositorio.deleteById(idUsuario);
+	public ResponseEntity<Object> deletarPorId(@PathVariable(value = "id_usuario") Long idUsuario) {
+		Optional<usuarioModel> objetoExistente = repositorio.findById(idUsuario);
+		if (objetoExistente.isPresent()) {
+			repositorio.deleteById(idUsuario);
+			return ResponseEntity.status(200).build();
+		} else {
+			return ResponseEntity.status(400).build();
+		}
+
 	}
 }
