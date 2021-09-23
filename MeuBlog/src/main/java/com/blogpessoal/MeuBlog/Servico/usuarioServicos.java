@@ -52,4 +52,16 @@ public class usuarioServicos {
 			return Optional.empty();
 		});
 	}
+	public Optional<?> alterarUsuario(usuarioDTO usuarioParaAlterar) {
+		return repositorio.findById(usuarioParaAlterar.getId()).map(usuarioExistente -> {
+			BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+			String senhaCriptografada = encoder.encode(usuarioParaAlterar.getSenha());
+
+			usuarioExistente.setNome(usuarioParaAlterar.getNome());
+			usuarioExistente.setSenha(senhaCriptografada);
+			return Optional.ofNullable(repositorio.save(usuarioExistente));
+		}).orElseGet(() -> {
+			return Optional.empty();
+		});
+	}
 }
