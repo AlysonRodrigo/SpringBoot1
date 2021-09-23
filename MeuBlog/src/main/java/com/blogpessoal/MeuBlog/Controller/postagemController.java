@@ -2,9 +2,11 @@ package com.blogpessoal.MeuBlog.Controller;
 
 import java.util.List;
 import javax.validation.Valid;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,11 +19,17 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.blogpessoal.MeuBlog.Model.postagemModel;
 import com.blogpessoal.MeuBlog.Repository.postagemRepository;
+import com.blogpessoal.MeuBlog.Servico.postagemServicos;
+
+import io.swagger.annotations.Api;
 
 @RestController
 @RequestMapping("/postagem")
+@Api(tags = "Controlador de Postagem", description = "Utilitario de Postagens")
+@CrossOrigin("*")
 public class postagemController {
 	private @Autowired postagemRepository repositorio;
+	private @Autowired postagemServicos servicos;
 
 	@GetMapping("/todas")
 	public ResponseEntity<List<postagemModel>> pegarTodas() {
@@ -35,12 +43,18 @@ public class postagemController {
 	}
 
 	@PostMapping("/salvar")
-	public ResponseEntity<Object> salvar(@Valid @RequestBody postagemModel novoCategoria) {
+	public ResponseEntity<Object> cadastrarPostagem(@Valid @RequestBody postagemModel novaPostagem) {
+		Optional<?> objetoCadastrado = servicos.cadastrarPostagem(novaPostagem);
 
-		return ResponseEntity.status(201).body(repositorio.save(novoCategoria));
+		if (objetoCadastrado.isPresent()) {
+			return ResponseEntity.status(201).body(objetoCadastrado.get());
+		} else {
+			return ResponseEntity.status(400).build();
+		}
+
 	}
 
-	@GetMapping("/titulo/{titulo}")
+	@GetMapping("/{titulo}")
 	public ResponseEntity<List<postagemModel>> buscarPorTituloI(@PathVariable(value = "titulo") String titulo) {
 		List<postagemModel> objetoLista = repositorio.findAllByTituloContainingIgnoreCase(titulo);
 
@@ -63,12 +77,24 @@ public class postagemController {
 	}
 
 	@PutMapping("/atualizar")
-	public ResponseEntity<postagemModel> atualizar(@Valid @RequestBody postagemModel postagemParaAtualizar) {
-		return ResponseEntity.status(201).body(repositorio.save(postagemParaAtualizar));
+	public ResponseEntity<Object> alterar(@Valid @RequestBody postagemModel postagemParaAlterar) {
+		Optional<postagemModel> objetoAlterado = servicos.alterarPostagem(postagemParaAlterar);
+
+		if (objetoAlterado.isPresent()) {
+			return ResponseEntity.status(201).body(objetoAlterado.get());
+		} else {
+			return ResponseEntity.status(400).build();
+		}
 	}
 
-	@DeleteMapping("/deletar/{id_postagem}")
-	public void deletarPostagemPorId(@PathVariable(value = "id_postagem") Long idPostagem) {
-		repositorio.deleteById(idPostagem);
+	public ResponseEntity<Object> deletarPorId(@PathVariable(value = "id_postagem") Long idPostagem) {
+		Optional<postagemModel> objetoExistente = repositorio.findById(idPostagem);
+		if (objetoExistente.isPresent()) {
+			repositorio.deleteById(idPostagem);
+			return ResponseEntity.status(200).build();
+		} else {
+			return ResponseEntity.status(400).build();
+		}
+		
 	}
 }
