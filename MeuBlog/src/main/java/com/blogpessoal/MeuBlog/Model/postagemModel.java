@@ -1,5 +1,7 @@
 package com.blogpessoal.MeuBlog.Model;
 
+import java.time.LocalDate;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -7,6 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
@@ -14,6 +17,11 @@ public class postagemModel {
 	private @Id @GeneratedValue(strategy = GenerationType.IDENTITY) long idPostagem;
 	private String titulo;
 	private String descricao;
+
+	@JsonFormat(pattern = "yyyy-MM-dd")
+	private LocalDate dataPostagem = LocalDate.now();
+
+	
 
 	@ManyToOne
 	@JoinColumn(name = "criadores")
@@ -64,5 +72,12 @@ public class postagemModel {
 
 	public void setCriador(usuarioModel criador) {
 		this.criador = criador;
+	}
+	public LocalDate getDataPostagem() {
+		return dataPostagem;
+	}
+
+	public void setDataPostagem(LocalDate dataPostagem) {
+		this.dataPostagem = dataPostagem;
 	}
 }

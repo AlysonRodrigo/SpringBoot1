@@ -8,7 +8,7 @@ public class usuarioDTO {
 	private @NotBlank String senha;
 
 	private Long id;
-	private String nome;
+	private String nome; 	
 	private String token;
 
 	public String getEmail() {
