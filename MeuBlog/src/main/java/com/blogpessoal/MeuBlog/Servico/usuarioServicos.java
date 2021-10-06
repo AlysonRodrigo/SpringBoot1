@@ -52,6 +52,7 @@ public class usuarioServicos {
 			return Optional.empty();
 		});
 	}
+
 	public Optional<?> alterarUsuario(usuarioDTO usuarioParaAlterar) {
 		return repositorio.findById(usuarioParaAlterar.getId()).map(usuarioExistente -> {
 			BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
@@ -64,4 +65,30 @@ public class usuarioServicos {
 			return Optional.empty();
 		});
 	}
+
+	public Optional<usuarioDTO> Logar(Optional<usuarioDTO> user) {
+
+		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+		Optional<usuarioModel> usuario = repositorio.findByEmail(user.get().getEmail());
+
+		if (usuario.isPresent()) {
+			if (encoder.matches(user.get().getSenha(), usuario.get().getSenha())) {
+
+				String auth = user.get().getSenha()+ ":" + user.get().getSenha();
+				byte[] encodedAuth = Base64.encodeBase64(auth.getBytes(Charset.forName("US-ASCII")));
+				String authHeader = "Basic " + new String(encodedAuth);
+
+				user.get().setToken(authHeader);			
+				user.get().setId(usuario.get().getIdUsuario());
+				user.get().setNome(usuario.get().getNome());
+				user.get().setFoto(usuario.get().getFoto());
+				user.get().setTipo(usuario.get().getTipo());
+				
+				return user;
+
+			}
+		}
+		return null;
+	}
+
 }

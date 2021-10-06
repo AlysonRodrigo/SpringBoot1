@@ -19,6 +19,9 @@ public class usuarioModel {
 	private @NotBlank String nome;
 	private @NotBlank String email;
 	private @NotBlank String senha;
+	private String foto;
+	private String tipo;
+	
 	@OneToMany(mappedBy = "criador", cascade = CascadeType.REMOVE)
 	@JsonIgnoreProperties({ "criador" })
 	private List<postagemModel> minhasPostagens = new ArrayList<>();
@@ -61,6 +64,30 @@ public class usuarioModel {
 
 	public void setSenha(String senha) {
 		this.senha = senha;
+	}
+
+	public String getFoto() {
+		return foto;
+	}
+
+	public void setFoto(String foto) {
+		this.foto = foto;
+	}
+
+	public String getTipo() {
+		return tipo;
+	}
+
+	public void setTipo(String tipo) {
+		this.tipo = tipo;
+	}
+
+	public List<postagemModel> getMinhasPostagens() {
+		return minhasPostagens;
+	}
+
+	public void setMinhasPostagens(List<postagemModel> minhasPostagens) {
+		this.minhasPostagens = minhasPostagens;
 	}
 
 }

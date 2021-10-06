@@ -7,6 +7,7 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,6 +27,7 @@ import io.swagger.annotations.ApiResponses;
 
 @RestController
 @RequestMapping("/tema")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class temaController {
 	public @Autowired temaRepository repositorio;
 	private @Autowired TemaServicos servicos;
@@ -83,18 +85,17 @@ public class temaController {
 
 	@ApiOperation(value = "Atualizar tema existente")
 	@ApiResponses(value = { @ApiResponse(code = 201, message = "Retorna tema atualizado"),
-			@ApiResponse(code = 400, message = "Id de tema invalido") 
-	})
+			@ApiResponse(code = 400, message = "Id de tema invalido") })
 	@PutMapping("/atualizar")
 	public ResponseEntity<temaModel> atualizar(@Valid @RequestBody temaModel temaParaAtualizar) {
 		Optional<temaModel> objetoAlterado = servicos.atualizarTema(temaParaAtualizar);
 
 		if (objetoAlterado.isPresent()) {
-		return ResponseEntity.status(201).body(objetoAlterado.get());
-	} else {
-		return ResponseEntity.status(400).build();
+			return ResponseEntity.status(201).body(objetoAlterado.get());
+		} else {
+			return ResponseEntity.status(400).build();
+		}
 	}
-}
 
 	@DeleteMapping("/deletar/{id_tema}")
 	public void deletarTemaPorId(@PathVariable(value = "id_tema") Long idTema) {

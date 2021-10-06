@@ -7,6 +7,7 @@ import java.util.Optional;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -28,15 +29,17 @@ import io.swagger.annotations.Api;
 
 @RestController
 @RequestMapping("/usuario")
-@Api(tags = "Controlador de Postagem", description = "Utilitario de Postagens")
-@CrossOrigin("*")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class usuarioController {
-	private @Autowired usuarioRepository repositorio;
-	private @Autowired usuarioServicos servicos;
+	@Autowired
+	private usuarioRepository repository;
+	
+	@Autowired
+	private usuarioServicos usuarioService;
 
 	@GetMapping("/todes")
 	public ResponseEntity<List<usuarioModel>> pegarTodes() {
-		List<usuarioModel> objetoLista = repositorio.findAll();
+		List<usuarioModel> objetoLista = repository.findAll();
 
 		if (objetoLista.isEmpty()) {
 			return ResponseEntity.status(204).build();
@@ -46,31 +49,16 @@ public class usuarioController {
 
 	}
 
-	@PostMapping("/salvar")
-	public ResponseEntity<Object> salvar(@Valid @RequestBody usuarioModel novoUsuario) {
-		Optional<Object> objetoOptional = servicos.cadastroUsuario(novoUsuario);
 
-		if (objetoOptional.isEmpty()) {
-			return ResponseEntity.status(400).build();
-		} else {
-			return ResponseEntity.status(201).body(objetoOptional.get());
-		}
-	}
-
-	@PutMapping("/credenciais")
-	public ResponseEntity<Object> credenciais(@Valid @RequestBody usuarioDTO usuarioParaAutenticar) {
-		Optional<?> objetoOptional = servicos.pegarCredenciais(usuarioParaAutenticar);
-
-		if (objetoOptional.isEmpty()) {
-			return ResponseEntity.status(400).build();
-		} else {
-			return ResponseEntity.status(201).body(objetoOptional.get());
-		}
+	@PostMapping("/logar")
+	public ResponseEntity<usuarioDTO> Autentication(@RequestBody Optional<usuarioDTO> user) {
+		return usuarioService.Logar(user).map(resp -> ResponseEntity.ok(resp))
+				.orElse(ResponseEntity.status(HttpStatus.UNAUTHORIZED).build());
 	}
 
 	@GetMapping("/{id_usuario}")
 	public ResponseEntity<usuarioModel> buscarPorId(@PathVariable(value = "id_usuario") Long idUsuario) {
-		Optional<usuarioModel> objetoUsuario = repositorio.findById(idUsuario);
+		Optional<usuarioModel> objetoUsuario = repository.findById(idUsuario);
 
 		if (objetoUsuario.isPresent()) {
 			return ResponseEntity.status(200).body(objetoUsuario.get());
@@ -79,31 +67,20 @@ public class usuarioController {
 		}
 	}
 
-	@GetMapping("/nome/{nome_usuario}")
-	public ResponseEntity<List<usuarioModel>> buscarPorNomeI(@PathVariable(value = "nome_usuario") String nome) {
-		List<usuarioModel> objetoLista = repositorio.findAllByNomeContainingIgnoreCase(nome);
+	@PostMapping("/salvar")
+	public ResponseEntity<Object> salvar(@Valid @RequestBody usuarioModel novoUsuario) {
+		Optional<Object> objetoOptional = usuarioService.cadastroUsuario(novoUsuario);
 
-		if (objetoLista.isEmpty()) {
-			return ResponseEntity.status(204).build();
+		if (objetoOptional.isEmpty()) {
+			return ResponseEntity.status(400).build();
 		} else {
-			return ResponseEntity.status(200).body(objetoLista);
+			return ResponseEntity.status(201).body(objetoOptional.get());
 		}
 	}
-
-	@GetMapping("/pesquisa")
-	public ResponseEntity<List<usuarioModel>> buscarPorNomeII(@RequestParam(defaultValue = "") String nome) {
-		List<usuarioModel> objetoLista = repositorio.findAllByNomeContainingIgnoreCase(nome);
-
-		if (objetoLista.isEmpty()) {
-			return ResponseEntity.status(204).build();
-		} else {
-			return ResponseEntity.status(200).body(objetoLista);
-		}
-	}
-
+	
 	@PutMapping("/atualizar")
 	public ResponseEntity<Object> alterar(@Valid @RequestBody usuarioDTO usuarioParaAlterar) {
-		Optional<?> objetoAlterado = servicos.alterarUsuario(usuarioParaAlterar);
+		Optional<?> objetoAlterado = usuarioService.alterarUsuario(usuarioParaAlterar);
 
 		if (objetoAlterado.isPresent()) {
 			return ResponseEntity.status(201).body(objetoAlterado.get());
@@ -111,15 +88,27 @@ public class usuarioController {
 			return ResponseEntity.status(400).build();
 		}
 	}
+	
 	@DeleteMapping("/deletar/{id_usuario}")
 	public ResponseEntity<Object> deletarPorId(@PathVariable(value = "id_usuario") Long idUsuario) {
-		Optional<usuarioModel> objetoExistente = repositorio.findById(idUsuario);
+		Optional<usuarioModel> objetoExistente = repository.findById(idUsuario);
 		if (objetoExistente.isPresent()) {
-			repositorio.deleteById(idUsuario);
+			repository.deleteById(idUsuario);
 			return ResponseEntity.status(200).build();
 		} else {
 			return ResponseEntity.status(400).build();
 		}
 
+	}
+
+	@GetMapping("/nome/{nome_usuario}")
+	public ResponseEntity<List<usuarioModel>> buscarPorNomeI(@PathVariable(value = "nome_usuario") String nome) {
+		List<usuarioModel> objetoLista = repository.findAllByNomeContainingIgnoreCase(nome);
+
+		if (objetoLista.isEmpty()) {
+			return ResponseEntity.status(204).build();
+		} else {
+			return ResponseEntity.status(200).body(objetoLista);
+		}
 	}
 }

@@ -25,8 +25,7 @@ import io.swagger.annotations.Api;
 
 @RestController
 @RequestMapping("/postagem")
-@Api(tags = "Controlador de Postagem", description = "Utilitario de Postagens")
-@CrossOrigin("*")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class postagemController {
 	private @Autowired postagemRepository repositorio;
 	private @Autowired postagemServicos servicos;
