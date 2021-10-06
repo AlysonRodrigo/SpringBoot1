@@ -55,7 +55,7 @@ public class temaController {
 		return ResponseEntity.status(201).body(repositorio.save(novoTema));
 	}
 
-	@ApiOperation(value = "Busca tema por Id")
+	/*@ApiOperation(value = "Busca tema por Id")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Retorna tema existente"),
 			@ApiResponse(code = 204, message = "Retorno inexistente") })
 	@GetMapping("/{id_tema}")
@@ -96,7 +96,21 @@ public class temaController {
 			return ResponseEntity.status(400).build();
 		}
 	}
-
+*/
+	@GetMapping("/{id}")
+	public ResponseEntity<temaModel> getById(@PathVariable long id){
+		return repositorio.findById(id).map(resp -> ResponseEntity.ok(resp))
+				.orElse(ResponseEntity.notFound().build());
+	}
+	
+	@GetMapping("/nome/{nome}")
+	public ResponseEntity<List<temaModel>> getByName(@PathVariable String nome){
+		return ResponseEntity.ok(repositorio.findAllByTemaContainingIgnoreCase(nome));
+	}
+	@PutMapping
+	public ResponseEntity<temaModel> put (@RequestBody temaModel tema){
+		return ResponseEntity.ok(repositorio.save(tema));				
+	}
 	@DeleteMapping("/deletar/{id_tema}")
 	public void deletarTemaPorId(@PathVariable(value = "id_tema") Long idTema) {
 		repositorio.deleteById(idTema);

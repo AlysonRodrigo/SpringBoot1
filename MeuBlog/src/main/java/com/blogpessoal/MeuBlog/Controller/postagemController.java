@@ -5,6 +5,7 @@ import javax.validation.Valid;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -27,7 +28,7 @@ import io.swagger.annotations.Api;
 @RequestMapping("/postagem")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class postagemController {
-	private @Autowired postagemRepository repositorio;
+	/*private @Autowired postagemRepository repositorio;
 	private @Autowired postagemServicos servicos;
 
 	@GetMapping("/todas")
@@ -95,5 +96,39 @@ public class postagemController {
 			return ResponseEntity.status(400).build();
 		}
 		
+	}*/
+	@Autowired
+	private postagemRepository repositoty;
+	
+	@GetMapping
+	public ResponseEntity<List<postagemModel>> GetAll(){
+		return ResponseEntity.ok(repositoty.findAll());
 	}
+
+	@GetMapping("/{id}")
+	public ResponseEntity<postagemModel> GetById(@PathVariable long id){
+		return repositoty.findById(id)
+				.map(resp -> ResponseEntity.ok(resp))
+				.orElse(ResponseEntity.notFound().build());
+	}
+	
+	@GetMapping("/titulo/{titulo}")
+	public ResponseEntity<List<postagemModel>> GetByTitulo(@PathVariable String titulo){
+		return ResponseEntity.ok(repositoty.findAllByTituloContainingIgnoreCase(titulo));
+	}
+	
+	@PostMapping
+	public ResponseEntity<postagemModel> post (@RequestBody postagemModel postagem){
+		return ResponseEntity.status(HttpStatus.CREATED).body(repositoty.save(postagem));
+	}
+	
+	@PutMapping
+	public ResponseEntity<postagemModel> put (@RequestBody postagemModel postagem){
+		return ResponseEntity.status(HttpStatus.OK).body(repositoty.save(postagem));
+	}
+	
+	@DeleteMapping("/{id}")
+	public void delete(@PathVariable long id) {
+		repositoty.deleteById(id);
+	}	
 }

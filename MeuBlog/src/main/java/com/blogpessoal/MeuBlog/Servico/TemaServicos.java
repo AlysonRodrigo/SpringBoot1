@@ -14,7 +14,7 @@ public class TemaServicos {
 
 	public Optional<temaModel> atualizarTema(temaModel temaParaAlterar) {
 		return repository.findById(temaParaAlterar.getIdTema()).map(temaExistente -> {
-			temaExistente.setIdTema(temaParaAlterar.getIdTema());
+			temaExistente.setTema(temaParaAlterar.getTema());
 			return Optional.ofNullable(repository.save(temaExistente));
 		}).orElseGet(() -> {
 			return Optional.empty();
