@@ -17,11 +17,11 @@ public class postagemServicos {
 	private @Autowired temaRepository repositorioT;
 	
 	public Optional<?> cadastrarPostagem(postagemModel novaPostagem) {
-		Optional<temaModel> objetoExistente = repositorioT.findById(novaPostagem.getTemasRelacionados().getIdTema());
+		Optional<temaModel> objetoExistente = repositorioT.findById(novaPostagem.getTemaRelacionados().getIdTema());
 		return repositorioU.findById(novaPostagem.getCriador().getIdUsuario()).map(usuarioExistente -> {
 			if (objetoExistente.isPresent()) {
 				novaPostagem.setCriador(usuarioExistente);
-				novaPostagem.setTemasRelacionados(objetoExistente.get());
+				novaPostagem.setTemaRelacionados(objetoExistente.get());
 				return Optional.ofNullable(repositorioP.save(novaPostagem));
 			} else {
 				return Optional.empty();

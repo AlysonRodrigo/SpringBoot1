@@ -29,7 +29,7 @@ import io.swagger.annotations.Api;
 
 @RestController
 @RequestMapping("/usuario")
-@CrossOrigin(origins = "*", allowedHeaders = "*")
+@CrossOrigin("*")
 public class usuarioController {
 	@Autowired
 	private usuarioRepository repository;

@@ -27,7 +27,7 @@ import io.swagger.annotations.ApiResponses;
 
 @RestController
 @RequestMapping("/tema")
-@CrossOrigin(origins = "*", allowedHeaders = "*")
+@CrossOrigin("*")
 public class temaController {
 	public @Autowired temaRepository repositorio;
 	private @Autowired TemaServicos servicos;
@@ -55,62 +55,67 @@ public class temaController {
 		return ResponseEntity.status(201).body(repositorio.save(novoTema));
 	}
 
-	/*@ApiOperation(value = "Busca tema por Id")
-	@ApiResponses(value = { @ApiResponse(code = 200, message = "Retorna tema existente"),
-			@ApiResponse(code = 204, message = "Retorno inexistente") })
-	@GetMapping("/{id_tema}")
-	public ResponseEntity<temaModel> buscarPorId(@PathVariable(value = "id_tema") Long idTema) {
-		Optional<temaModel> objetoTema = repositorio.findById(idTema);
-
-		if (objetoTema.isPresent()) {
-			return ResponseEntity.status(200).body(objetoTema.get());
-		} else {
-			return ResponseEntity.status(204).build();
-		}
-	}
-
-	@ApiOperation(value = "Busca tema por nome")
-	@ApiResponses(value = { @ApiResponse(code = 200, message = "Retorna tema existente"),
-			@ApiResponse(code = 204, message = "Retorno inexistente") })
-	@GetMapping("/{tema}")
-	public ResponseEntity<List<temaModel>> buscarPorTemaI(@PathVariable(value = "tema") String tema) {
-		List<temaModel> objetoLista = repositorio.findAllByTemaContainingIgnoreCase(tema);
-
-		if (objetoLista.isEmpty()) {
-			return ResponseEntity.status(204).build();
-		} else {
-			return ResponseEntity.status(200).body(objetoLista);
-		}
-	}
-
-	@ApiOperation(value = "Atualizar tema existente")
-	@ApiResponses(value = { @ApiResponse(code = 201, message = "Retorna tema atualizado"),
-			@ApiResponse(code = 400, message = "Id de tema invalido") })
-	@PutMapping("/atualizar")
-	public ResponseEntity<temaModel> atualizar(@Valid @RequestBody temaModel temaParaAtualizar) {
-		Optional<temaModel> objetoAlterado = servicos.atualizarTema(temaParaAtualizar);
-
-		if (objetoAlterado.isPresent()) {
-			return ResponseEntity.status(201).body(objetoAlterado.get());
-		} else {
-			return ResponseEntity.status(400).build();
-		}
-	}
-*/
+	/*
+	 * @ApiOperation(value = "Busca tema por Id")
+	 * 
+	 * @ApiResponses(value = { @ApiResponse(code = 200, message =
+	 * "Retorna tema existente"),
+	 * 
+	 * @ApiResponse(code = 204, message = "Retorno inexistente") })
+	 * 
+	 * @GetMapping("/{id_tema}") public ResponseEntity<temaModel>
+	 * buscarPorId(@PathVariable(value = "id_tema") Long idTema) {
+	 * Optional<temaModel> objetoTema = repositorio.findById(idTema);
+	 * 
+	 * if (objetoTema.isPresent()) { return
+	 * ResponseEntity.status(200).body(objetoTema.get()); } else { return
+	 * ResponseEntity.status(204).build(); } }
+	 * 
+	 * @ApiOperation(value = "Busca tema por nome")
+	 * 
+	 * @ApiResponses(value = { @ApiResponse(code = 200, message =
+	 * "Retorna tema existente"),
+	 * 
+	 * @ApiResponse(code = 204, message = "Retorno inexistente") })
+	 * 
+	 * @GetMapping("/{tema}") public ResponseEntity<List<temaModel>>
+	 * buscarPorTemaI(@PathVariable(value = "tema") String tema) { List<temaModel>
+	 * objetoLista = repositorio.findAllByTemaContainingIgnoreCase(tema);
+	 * 
+	 * if (objetoLista.isEmpty()) { return ResponseEntity.status(204).build(); }
+	 * else { return ResponseEntity.status(200).body(objetoLista); } }
+	 * 
+	 * @ApiOperation(value = "Atualizar tema existente")
+	 * 
+	 * @ApiResponses(value = { @ApiResponse(code = 201, message =
+	 * "Retorna tema atualizado"),
+	 * 
+	 * @ApiResponse(code = 400, message = "Id de tema invalido") })
+	 * 
+	 * @PutMapping("/atualizar") public ResponseEntity<temaModel>
+	 * atualizar(@Valid @RequestBody temaModel temaParaAtualizar) {
+	 * Optional<temaModel> objetoAlterado =
+	 * servicos.atualizarTema(temaParaAtualizar);
+	 * 
+	 * if (objetoAlterado.isPresent()) { return
+	 * ResponseEntity.status(201).body(objetoAlterado.get()); } else { return
+	 * ResponseEntity.status(400).build(); } }
+	 */
 	@GetMapping("/{id}")
-	public ResponseEntity<temaModel> getById(@PathVariable long id){
-		return repositorio.findById(id).map(resp -> ResponseEntity.ok(resp))
-				.orElse(ResponseEntity.notFound().build());
+	public ResponseEntity<temaModel> getById(@PathVariable long id) {
+		return repositorio.findById(id).map(resp -> ResponseEntity.ok(resp)).orElse(ResponseEntity.notFound().build());
 	}
-	
+
 	@GetMapping("/nome/{nome}")
-	public ResponseEntity<List<temaModel>> getByName(@PathVariable String nome){
+	public ResponseEntity<List<temaModel>> getByName(@PathVariable String nome) {
 		return ResponseEntity.ok(repositorio.findAllByTemaContainingIgnoreCase(nome));
 	}
+
 	@PutMapping
-	public ResponseEntity<temaModel> put (@RequestBody temaModel tema){
-		return ResponseEntity.ok(repositorio.save(tema));				
+	public ResponseEntity<temaModel> put(@RequestBody temaModel tema) {
+		return ResponseEntity.ok(repositorio.save(tema));
 	}
+
 	@DeleteMapping("/deletar/{id_tema}")
 	public void deletarTemaPorId(@PathVariable(value = "id_tema") Long idTema) {
 		repositorio.deleteById(idTema);

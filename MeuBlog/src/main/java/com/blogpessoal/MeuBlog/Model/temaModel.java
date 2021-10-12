@@ -17,11 +17,10 @@ public class temaModel {
 	private @Id @GeneratedValue(strategy = GenerationType.IDENTITY) long idTema;
 	private String tema;
 
-	@OneToMany(mappedBy = "TemasRelacionados", cascade = CascadeType.REMOVE)
-	@JsonIgnoreProperties({"TemasRelacionados"})
-	private List<postagemModel>postagens =new ArrayList<>();
-	
-	
+	@OneToMany(mappedBy = "temaRelacionados", cascade = CascadeType.REMOVE)
+	@JsonIgnoreProperties({"temaRelacionados"})
+	private List<postagemModel> postagens = new ArrayList<>();
+
 	public List<postagemModel> getPostagens() {
 		return postagens;
 	}

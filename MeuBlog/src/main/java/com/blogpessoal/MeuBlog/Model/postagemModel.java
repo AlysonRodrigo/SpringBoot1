@@ -1,6 +1,6 @@
 package com.blogpessoal.MeuBlog.Model;
 
-import java.time.LocalDate;
+import java.util.Date;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -9,44 +9,32 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 public class postagemModel {
-	private @Id @GeneratedValue(strategy = GenerationType.IDENTITY) long idPostagem;
+	private @Id @GeneratedValue(strategy = GenerationType.IDENTITY) Long idPostagem;
 	private String titulo;
 	private String descricao;
 
-	@JsonFormat(pattern = "yyyy-MM-dd")
-	private LocalDate dataPostagem = LocalDate.now();
-
+	private Date date = new java.sql.Date(System.currentTimeMillis());
 	
-
 	@ManyToOne
 	@JoinColumn(name = "criadores")
 	@JsonIgnoreProperties({ "minhasPostagens" })
 	private usuarioModel criador;
 
 	@ManyToOne
-	@JoinColumn(name = "Temas")
-	@JsonIgnoreProperties({ "postagens" })
-	private temaModel TemasRelacionados;
+	@JoinColumn(name = "tema")
+	@JsonIgnoreProperties({"postagens"})
+	private temaModel temaRelacionados;
 
-	public temaModel getTemasRelacionados() {
-		return TemasRelacionados;
+	public temaModel getTemaRelacionados() {
+		return temaRelacionados;
 	}
 
-	public void setTemasRelacionados(temaModel temasRelacionados) {
-		TemasRelacionados = temasRelacionados;
-	}
-
-	public long getIdPostagem() {
-		return idPostagem;
-	}
-
-	public void setIdPostagem(long idPostagem) {
-		this.idPostagem = idPostagem;
+	public void setTemaRelacionados(temaModel temaRelacionados) {
+		this.temaRelacionados = temaRelacionados;
 	}
 
 	public String getTitulo() {
@@ -63,7 +51,6 @@ public class postagemModel {
 
 	public void setDescricao(String descricao) {
 		this.descricao = descricao;
-
 	}
 
 	public usuarioModel getCriador() {
@@ -73,11 +60,22 @@ public class postagemModel {
 	public void setCriador(usuarioModel criador) {
 		this.criador = criador;
 	}
-	public LocalDate getDataPostagem() {
-		return dataPostagem;
+
+	public Date getDate() {
+		return date;
 	}
 
-	public void setDataPostagem(LocalDate dataPostagem) {
-		this.dataPostagem = dataPostagem;
+	public void setDate(Date date) {
+		this.date = date;
 	}
+
+	public void setIdPostagem(Long idPostagem) {
+		this.idPostagem = idPostagem;
+	}
+
+	public Long getIdPostagem() {
+		return idPostagem;
+	}
+	
+
 }
